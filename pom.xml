@@ -70,6 +70,8 @@
     <tomcat-embed-core.version>9.0.45</tomcat-embed-core.version>
     <findify-s3mock.version>0.2.6</findify-s3mock.version>
     <checkstyle.version>8.41.1</checkstyle.version>
+    <jqassistant.maven.version>1.9.1</jqassistant.maven.version>
+    <jqassistant.dashboard.version>1.9.0</jqassistant.dashboard.version>
   </properties>
 
   <dependencyManagement>
@@ -615,6 +617,43 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+      <!-- jQAssistant -->
+      <plugin>
+        <groupId>com.buschmais.jqassistant</groupId>
+        <artifactId>jqassistant-maven-plugin</artifactId>
+        <version>${jqassistant.maven.version}</version>
+        <executions>
+          <execution>
+            <id>default-cli</id>
+            <goals>
+              <goal>scan</goal>
+              <goal>analyze</goal>
+            </goals>
+            <configuration>
+              <failOnSeverity>CRITICAL</failOnSeverity>
+              <warnOnSeverity>MINOR</warnOnSeverity>
+
+              <groups>
+                  <group>spring-boot:Strict</group>
+                  <group>jqassistant-dashboard:Default</group>
+              </groups>
+
+              <scanIncludes>
+                <scanInclude>
+                  <path>${project.basedir}/.git</path>
+                </scanInclude>
+              </scanIncludes>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.jqassistant.contrib.plugin</groupId>
+            <artifactId>jqassistant-dashboard-plugin</artifactId>
+            <version>${jqassistant.dashboard.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
