@@ -1,0 +1,28 @@
+= Use Spring Boot For Service Components
+
+== Status
+
+Accepted
+
+== Context
+
+The CWA server consists of several services.
+For maintenance reasons they should be implemented using the samme core technology framework.
+
+== Decision
+
+Spring Boot shall be used as framework.
+
+== Consequences
+
+[[adr:ServiceComponent]]
+[source,cypher,role=concept,requiresConcepts="spring-boot:Application"]
+.Each artifact containing a Spring Boot application is a `Service` `Component`.
+----
+MATCH
+  (service:Main:Artifact)-[:CONTAINS]->(application:Spring:Application)
+SET
+  service:Service:Component
+RETURN
+  service as Service, application as SpringBootApplication
+----

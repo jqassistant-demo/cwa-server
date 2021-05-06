@@ -1,0 +1,81 @@
+= Versions Of Dependencies Must Be Managed
+
+== Status
+
+Accepted
+
+== Context
+
+A library might be used as dependeny by multiple modules of the project.
+For consistency reasons the same version of that library should be used.
+
+== Decision
+
+The version of dependencies must be managed.
+
+== Consequences
+
+If a library is used the version must be specified in the `dependencyManagement` section:
+
+[source,xml]
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <!-- Allowed -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.opencwa</groupId>
+        <artifactId>persistence</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.opencwa</groupId>
+      <artifactId>persistence</artifactId>
+    </dependency>
+  </dependencies>
+
+  <!-- Forbidden -->
+  <dependencies>
+    <dependency>
+      <groupId>org.opencwa</groupId>
+      <artifactId>persistence</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+</project>
+----
+
+[source,xml]
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<dependencies>
+  <dependency>
+    <groupId>org.opencwa</groupId>
+    <artifactId>persistence</artifactId>
+    <version>${project.version}</version>
+  </dependency>
+</dependencies>
+
+</project>
+----
+
+[[adr:VersionsOfDependenciesMustBeManaged]]
+[source,cypher,role="constraint",severity=minor]
+.Dependency versions must NOT be specified in `dependency` sections, the declaration must be moved to the `dependencyManagement`.
+----
+MATCH
+  (project:Maven:Project)-[:HAS_MODEL]->(model),
+  (model)-[:DECLARES_DEPENDENCY]->()-[:TO_ARTIFACT]->(dependency:Artifact)
+WHERE
+  exists(dependency.version)
+RETURN
+  project.fqn as MavenProject, dependency as Dependency
+----
+

@@ -1,0 +1,33 @@
+:toc: left
+:toclevels: 3
+= CWA Server
+
+[[adr]]
+[role=group,includesConstraints="adr:*",includesConcepts="adr:*Report"]
+== Architecture Decision Records
+
+=== jQAssistant Summary
+
+include::jQA:Summary[constraints="*"]
+
+=== Components
+
+include::adr/structure/Use_Spring_Boot_For_Service_Components.adoc[leveloffset=+3]
+include::adr/structure/Re-Use_Common_Functionality.adoc[leveloffset=+3]
+include::adr/structure/Apply_Component_Dependencies.adoc[leveloffset=+3]
+
+=== Maven
+
+include::adr/maven/Versions_Of_Dependencies_Must_Be_Managed.adoc[leveloffset=+3]
+
+=== Exceptions
+
+include::adr/exception/Dont_Log_and_Throw.adoc[leveloffset=+3]
+
+=== Logging
+
+include::adr/logging/Use_Slf4j_for_Logging.adoc[leveloffset=+3]
+
+== Imported Rules
+
+include::jQA:ImportedRules[]

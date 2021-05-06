@@ -42,9 +42,11 @@
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
 
+    <!--
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>corona-warn-app</sonar.organization>
     <sonar.projectKey>${sonar.organization}_cwa-${project.artifactId}</sonar.projectKey>
+    -->
 
     <!-- https://spring.io/projects/spring-boot -->
     <spring-boot.version>2.4.5</spring-boot.version>
@@ -72,6 +74,7 @@
     <checkstyle.version>8.41.1</checkstyle.version>
     <jqassistant.maven.version>1.9.1</jqassistant.maven.version>
     <jqassistant.dashboard.version>1.9.0</jqassistant.dashboard.version>
+    <jqassistant.plantuml-rule.version>1.9.0</jqassistant.plantuml-rule.version>
   </properties>
 
   <dependencyManagement>
@@ -633,17 +636,17 @@
             <configuration>
               <failOnSeverity>CRITICAL</failOnSeverity>
               <warnOnSeverity>MINOR</warnOnSeverity>
-
               <groups>
+                  <group>adr</group>
                   <group>spring-boot:Strict</group>
                   <group>jqassistant-dashboard:Default</group>
               </groups>
-
               <scanIncludes>
                 <scanInclude>
                   <path>${project.basedir}/.git</path>
                 </scanInclude>
               </scanIncludes>
+              <attachReportArchive>true</attachReportArchive>
             </configuration>
           </execution>
         </executions>
@@ -652,6 +655,11 @@
             <groupId>org.jqassistant.contrib.plugin</groupId>
             <artifactId>jqassistant-dashboard-plugin</artifactId>
             <version>${jqassistant.dashboard.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.jqassistant.contrib.plugin</groupId>
+            <artifactId>jqassistant-plantuml-rule-plugin</artifactId>
+            <version>${jqassistant.plantuml-rule.version}</version>
           </dependency>
         </dependencies>
       </plugin>
