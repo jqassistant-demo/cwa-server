@@ -1,0 +1,85 @@
+= 001 - Use Slf4j for Logging
+
+== Status
+
+Accepted
+
+== Context
+
+Proper logging of the processes taking place during runtime is crucial to understand and debug occuring issues in production.
+
+This requires that logging is done uniformly to one place which requires that there is only one logging framework with one configuration used.
+
+Currently, there are multiple ways to log implemented in the application.
+
+== Decision
+
+Use the Slf4j API for all logging.
+
+== Consequences
+
+For new code:
+
+- Only use `org.slf4j.Logger` and `org.slf4j.LoggerFactory`
+
+[source,java]
+----
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class MyClass {
+
+  private static final Logger logger = LoggerFactory.getLogger(MyClass.class);
+
+}
+----
+
+For existing code:
+
+- Refactor all uses of other logging frameworks and calls to `System.out` and `System.err` to Slf4j
+
+[[adr:UseSlf4jForLogging]]
+[source,cypher,role="constraint",requiresConcepts="adr:Logger,adr:Slf4j",severity=minor]
+.Only the usage of Slf4 is allowed
+----
+MATCH  (logger:Type:Logger)-[:DECLARES]->(m:Method),
+       (t:Type)-[:DECLARES]->(:Method)-[usage:INVOKES]->(m)
+WHERE  NOT logger:Slf4j
+RETURN t.fqn AS Type, logger.fqn AS Logger, collect(usage.lineNumber) AS LineNumbers
+----
+
+[[adr:IllegalUsageOfSystemOutAndErr]]
+[source,cypher,role="constraint",severity=minor]
+.Don't use System.out and System.err in production code for logging
+----
+MATCH  (system:Type{fqn: "java.lang.System"})-[:DECLARES]->(writer:Field),
+       (a:Main:Artifact)-[:CONTAINS]->(t:Type)-[:DECLARES]->(m:Method),
+       (m)-[reads:READS]->(writer)
+WHERE  writer.signature in [
+         "java.io.PrintStream out",
+         "java.io.PrintStream err"
+       ]
+RETURN t.fqn as Type, writer.signature, collect(reads.lineNumber) as LineNumbers
+----
+
+== Concepts
+
+[[adr:Logger]]
+[source,cypher,role=concept]
+.The classes `org.slf4j.Logger`, `org.apache.commons.logging.Log` and `java.util.logging.Logger` are logging frameworks and labeled as `Logger`.
+----
+MATCH  (:Artifact)-[:REQUIRES]->(logger:Type)
+WHERE  logger.fqn IN ["org.slf4j.Logger", "org.apache.commons.logging.Log","java.util.logging.Logger","org.apache.logging.log4j.Logger"]
+SET    logger:Logger
+RETURN distinct logger.fqn AS Logger
+----
+
+[[adr:Slf4j]]
+[source,cypher,role=concept]
+.The class `org.slf4j.Logger` represents the `Slf4j` logger.
+----
+MATCH  (slf4j:Type)
+WHERE  slf4j.fqn = "org.slf4j.Logger"
+SET    slf4j:Slf4j
+RETURN distinct slf4j.fqn as Slf4j
+----

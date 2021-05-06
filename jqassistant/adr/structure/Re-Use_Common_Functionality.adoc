@@ -1,0 +1,30 @@
+= Re-Use Common Functionality
+
+== Status
+
+Accepted
+
+== Context
+
+The CWA server consists of several services which are based on common functionality.
+For maintenance reasons duplication shall be avoided.
+
+== Decision
+
+Common functionality shall be provided as libraries which can be re-used by different services.
+
+== Consequences
+
+[[adr:CommonComponent]]
+[source,cypher,role=concept]
+.Each artifact containing a package `app.coronawarn.server.common` represents a `Common` `Component` which can be re-used
+----
+MATCH
+  (artifact:Main:Artifact)-[:CONTAINS]->(common:Package)-[:CONTAINS]->(library:Package)
+WHERE
+  common.fqn = "app.coronawarn.server.common"
+SET
+  artifact:Common:Component
+RETURN
+  library.name as Library, artifact.fqn as CommonArtifact
+----
