@@ -642,8 +642,13 @@
                   <group>jqassistant-dashboard:Default</group>
               </groups>
               <scanIncludes>
+                <!-- Git repository -->
                 <scanInclude>
                   <path>${project.basedir}/.git</path>
+                </scanInclude>
+                <!-- JaCoCo -->
+                <scanInclude>
+                  <path>${project.build.directory}/site</path>
                 </scanInclude>
               </scanIncludes>
               <attachReportArchive>true</attachReportArchive>
@@ -652,11 +657,16 @@
         </executions>
         <dependencies>
           <dependency>
+            <!-- Includes the jQAssistant Dashboard and Git/JaCoCo plugins -->
             <groupId>org.jqassistant.contrib.plugin</groupId>
             <artifactId>jqassistant-dashboard-plugin</artifactId>
             <version>${jqassistant.dashboard.version}</version>
           </dependency>
           <dependency>
+            <!--
+              Allows definition of components and dependencies using PlantUML,
+              see /jqassistant/adr/structure/Apply_Component_Dependencies.adoc
+            -->
             <groupId>org.jqassistant.contrib.plugin</groupId>
             <artifactId>jqassistant-plantuml-rule-plugin</artifactId>
             <version>${jqassistant.plantuml-rule.version}</version>

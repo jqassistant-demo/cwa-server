@@ -28,7 +28,7 @@ skinparam componentStyle uml2
 [(any)]               as service        <<Service>><<Component>><<Artifact>>
 
 persistence   --> protocols     : (+):DEFINES_DEPENDENCY
-'federation   --> protocols     : (+):DEFINES_DEPENDENCY
+federation    --> protocols     : (+):DEFINES_DEPENDENCY
 
 service       --> persistence   : (+):DEFINES_DEPENDENCY
 service       --> protocols     : (+):DEFINES_DEPENDENCY
@@ -36,6 +36,7 @@ service       --> federation    : (+):DEFINES_DEPENDENCY
 
 @enduml
 ----
+// NOTE: The defined dependencies can as well be expressed using Cypher
 
 == Consequences
 
