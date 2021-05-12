@@ -31,7 +31,7 @@ This repository provides an example setup for the integration of jQAssistant int
 
 ## Analysis using Jupyter Notebooks
 
-* Run `docker-compose -f jqassistant-docker-compose.yml -up` (Note: the Neo4j server must be stopped before running this command)
+* Run `docker-compose -f jqassistant-docker-compose.yml up` (Note: the Neo4j server must be stopped before running this command)
 * Open the Juypter URL shown in the startup log including the token (e.g. `http://127.0.0.1:8888/?token=<the token>`) with your browser, this will open the Jupyter file browser
 * The folder `work` (mapped to `jqassistant/jupyter`) contains notebooks for the CWA project
   * `cwa.ipynb` is a  starting point for static dependency analysis
