@@ -632,13 +632,6 @@
               <goal>analyze</goal>
             </goals>
             <configuration>
-              <failOnSeverity>CRITICAL</failOnSeverity>
-              <warnOnSeverity>MINOR</warnOnSeverity>
-              <groups>
-                  <group>adr</group>
-                  <group>spring-boot:Strict</group>
-                  <group>jqassistant-dashboard:Default</group>
-              </groups>
               <scanIncludes>
                 <!-- Git repository -->
                 <scanInclude>
@@ -649,6 +642,16 @@
                   <path>${project.build.directory}/site</path>
                 </scanInclude>
               </scanIncludes>
+              <groups>
+                  <group>adr</group>
+                  <group>spring-boot:Strict</group>
+                  <group>jqassistant-dashboard:Default</group>
+              </groups>
+              <rule>
+                <defaultConceptSeverity>INFO</defaultConceptSeverity>
+              </rule>
+              <failOnSeverity>CRITICAL</failOnSeverity>
+              <warnOnSeverity>MINOR</warnOnSeverity>
               <attachReportArchive>true</attachReportArchive>
             </configuration>
           </execution>
