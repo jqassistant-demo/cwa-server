@@ -21,15 +21,22 @@ The following dependencies between components are defined:
 @startuml
 skinparam componentStyle uml2
 
-[{name:"persistence"}]  as persistence  <<Common>><<Component>><<Artifact>>
-[{name:"protocols"}]    as protocols    <<Common>><<Component>><<Artifact>>
-[{name:"federation"}]   as federation   <<Common>><<Component>><<Artifact>>
+folder "Common" {
+  [{name:"shared"}]       as shared       <<Common>><<Component>><<Artifact>>
+  [{name:"persistence"}]  as persistence  <<Common>><<Component>><<Artifact>>
+  [{name:"protocols"}]    as protocols    <<Common>><<Component>><<Artifact>>
+  [{name:"federation"}]   as federation   <<Common>><<Component>><<Artifact>>
+}
 
-[(any)]               as service        <<Service>><<Component>><<Artifact>>
+folder "Service" {
+  [(any)]                 as service      <<Service>><<Component>><<Artifact>>
+}
 
+persistence   --> shared        : (+):DEFINES_DEPENDENCY
 persistence   --> protocols     : (+):DEFINES_DEPENDENCY
 federation    --> protocols     : (+):DEFINES_DEPENDENCY
 
+service       --> shared        : (+):DEFINES_DEPENDENCY
 service       --> persistence   : (+):DEFINES_DEPENDENCY
 service       --> protocols     : (+):DEFINES_DEPENDENCY
 service       --> federation    : (+):DEFINES_DEPENDENCY
