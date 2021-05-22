@@ -1,6 +1,6 @@
 package app.coronawarn.server.services.distribution.dgc;
 
-import static app.coronawarn.server.services.distribution.utils.SerializationUtils.deserializeJsonToSimpleType;
+import static app.coronawarn.server.common.shared.util.SerializationUtils.deserializeJsonToSimpleType;
 
 import app.coronawarn.server.common.protocols.internal.dgc.ValueSet;
 import app.coronawarn.server.common.protocols.internal.dgc.ValueSetItem;
@@ -18,6 +18,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+
 @Component
 public class DigitalGreenCertificateToProtobufMapping {
 
@@ -34,7 +35,7 @@ public class DigitalGreenCertificateToProtobufMapping {
    *
    * @return The corresponding JSON object.
    */
-  VaccineJsonStringObject readMahJson() {
+  VaccineJsonStringObject readMahJson() throws DefaultValueSetsMissingException {
     String path = distributionServiceConfig.getDigitalGreenCertificate().getMahJsonPath();
     return readConfiguredJsonOrDefault(path, "dgc/vaccine-mah.json",
         VaccineJsonStringObject.class);
@@ -45,7 +46,7 @@ public class DigitalGreenCertificateToProtobufMapping {
    *
    * @return The corresponding JSON object.
    */
-  VaccineJsonStringObject readMedicinalProductJson() {
+  VaccineJsonStringObject readMedicinalProductJson() throws DefaultValueSetsMissingException {
     String path = distributionServiceConfig.getDigitalGreenCertificate().getMedicinalProductsJsonPath();
     return readConfiguredJsonOrDefault(path, "dgc/vaccine-medicinal-product.json",
         VaccineJsonStringObject.class);
@@ -56,7 +57,7 @@ public class DigitalGreenCertificateToProtobufMapping {
    *
    * @return The corresponding JSON object.
    */
-  VaccineJsonStringObject readProphylaxisJson() {
+  VaccineJsonStringObject readProphylaxisJson() throws DefaultValueSetsMissingException {
     String path = distributionServiceConfig.getDigitalGreenCertificate().getProphylaxisJsonPath();
     return readConfiguredJsonOrDefault(path, "dgc/vaccine-prophylaxis.json",
         VaccineJsonStringObject.class);
@@ -67,14 +68,14 @@ public class DigitalGreenCertificateToProtobufMapping {
    *
    * @return the protobuf filled with values from JSON.
    */
-  public ValueSets constructProtobufMapping() {
+  public ValueSets constructProtobufMapping() throws DefaultValueSetsMissingException {
     List<ValueSetItem> mahItems = toValueSetItems(readMahJson().getValueSetValues());
     List<ValueSetItem> productItems = toValueSetItems(readMedicinalProductJson().getValueSetValues());
     List<ValueSetItem> prophylaxisItems = toValueSetItems(readProphylaxisJson().getValueSetValues());
 
     return ValueSets.newBuilder()
         .setMa(ValueSet.newBuilder().addAllItems(mahItems).build())
-        .setVp(ValueSet.newBuilder().addAllItems(productItems).build())
+        .setMp(ValueSet.newBuilder().addAllItems(productItems).build())
         .setVp(ValueSet.newBuilder().addAllItems(prophylaxisItems).build())
         .build();
   }
@@ -87,9 +88,11 @@ public class DigitalGreenCertificateToProtobufMapping {
         .collect(Collectors.toList());
   }
 
-  private <T> T readConfiguredJsonOrDefault(String path, String defaultPath, Class<T> rawType) {
+  private <T> T readConfiguredJsonOrDefault(String path, String defaultPath, Class<T> rawType)
+      throws DefaultValueSetsMissingException {
     if (!ObjectUtils.isEmpty(path)) {
       try (InputStream jsonStream = resourceLoader.getResource(path).getInputStream()) {
+        logger.debug("Loading JSON from {}.", path);
         return deserializeJsonToSimpleType(jsonStream, rawType);
       } catch (IOException e) {
         logger.error("Error reading {} from json {}.", rawType.getSimpleName(), path, e);
@@ -97,10 +100,11 @@ public class DigitalGreenCertificateToProtobufMapping {
     }
     try (InputStream jsonStream = resourceLoader.getResource(defaultPath).getInputStream()) {
       // fallback to default
+      logger.debug("JSON to load was empty or invalid, falling back to loading from {}.", defaultPath);
       return deserializeJsonToSimpleType(jsonStream, rawType);
     } catch (IOException e) {
       logger.error("We could not load the default {}. This shouldn't happen!", defaultPath, e);
-      throw new RuntimeException("We could not load the default " + defaultPath
+      throw new DefaultValueSetsMissingException("Default valuesets is missing from the path " + defaultPath
           + ". This shouldn't happen!", e);
     }
   }

@@ -1,7 +1,7 @@
 package app.coronawarn.server.services.distribution.config;
 
 import app.coronawarn.server.common.protocols.external.exposurenotification.SignatureInfo;
-import app.coronawarn.server.services.distribution.utils.SerializationUtils;
+import app.coronawarn.server.common.shared.util.SerializationUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.constraints.Max;
@@ -19,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 public class DistributionServiceConfig {
 
   private static final String PATH_REGEX = "^[/]?[a-zA-Z0-9_]{1,1024}(/[a-zA-Z0-9_]{1,1024}){0,256}[/]?$";
+  private static final String RESOURCE_REGEX = "^(classpath:|file:[/]{1,3})?([a-zA-Z0-9_/\\.]{1,1010})$";
+  private static final String RESOURCE_OR_EMPTY_REGEX = "(" + RESOURCE_REGEX + ")?";
   private static final String FILE_NAME_REGEX = "^[a-zA-Z0-9_-]{1,1024}$";
   private static final String FILE_NAME_WITH_TYPE_REGEX = "^[a-zA-Z0-9_-]{1,1024}\\.[a-z]{1,64}$";
   private static final String CHAR_AND_NUMBER_REGEX = "^[a-zA-Z0-9_-]{1,1024}$";
@@ -1476,20 +1478,24 @@ public class DistributionServiceConfig {
 
   public static class DigitalGreenCertificate {
 
-    @NotNull
+    @Pattern(regexp = RESOURCE_OR_EMPTY_REGEX)
     private String mahJsonPath;
 
-    @NotNull
+    @Pattern(regexp = RESOURCE_OR_EMPTY_REGEX)
     private String prophylaxisJsonPath;
 
-    @NotNull
+    @Pattern(regexp = RESOURCE_OR_EMPTY_REGEX)
     private String medicinalProductsJsonPath;
 
+    @NotNull
     @Pattern(regexp = CHAR_AND_NUMBER_REGEX)
     private String dgcDirectory;
 
+    @NotNull
     @Pattern(regexp = CHAR_AND_NUMBER_REGEX)
-    private String valuesetsDirectory;
+    private String valuesetsFileName;
+
+    private String[] supportedLanguages;
 
     public String getMahJsonPath() {
       return mahJsonPath;
@@ -1523,12 +1529,20 @@ public class DistributionServiceConfig {
       this.dgcDirectory = dgcDirectory;
     }
 
-    public String getValuesetsDirectory() {
-      return valuesetsDirectory;
+    public String getValuesetsFileName() {
+      return valuesetsFileName;
     }
 
-    public void setValuesetsDirectory(String valuesetsDirectory) {
-      this.valuesetsDirectory = valuesetsDirectory;
+    public void setValuesetsFileName(String valuesetsFileName) {
+      this.valuesetsFileName = valuesetsFileName;
+    }
+
+    public String[] getSupportedLanguages() {
+      return supportedLanguages;
+    }
+
+    public void setSupportedLanguages(String[] supportedLanguages) {
+      this.supportedLanguages = supportedLanguages;
     }
   }
 }
