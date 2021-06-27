@@ -2,7 +2,7 @@
 version: '3'
 services:
   neo4j:
-    image: neo4j:3.5.24
+    image: neo4j:3.5.28
     ports:
       - 7474:7474
       - 7687:7687
@@ -11,7 +11,7 @@ services:
     volumes:
       - ./target/jqassistant/store:/data/databases/graph.db
   jupyter:
-    image: jqassistant/jupyter-notebook:0.4.0
+    image: jqassistant/jupyter-notebook:1.10.0
     ports:
       - 8888:8888
     environment:
