@@ -16,6 +16,10 @@ include::adr/structure/Use_Spring_Boot_For_Service_Components.adoc[leveloffset=+
 include::adr/structure/Re-Use_Common_Functionality.adoc[leveloffset=+3]
 include::adr/structure/Apply_Component_Dependencies.adoc[leveloffset=+3]
 
+=== Protobuf
+
+include::adr/protobuf/Generate_Protocols_From_Protobuf_Files.adoc[leveloffset=+3]
+
 === Maven
 
 include::adr/maven/Versions_Of_Dependencies_Must_Be_Managed.adoc[leveloffset=+3]
