@@ -1,0 +1,84 @@
+= Implement Bounded Context Structure
+
+== Status
+
+Accepted
+
+== Context
+
+The CWA server implements multiple Bounded Contexts that are part of the CWA-Context and integrates with external services which themselves represent Bounded Contexts.
+
+For maintenance reasons, the separation of Bounded Contexts and the management of their inter-dependencies needs to be properly governed.
+
+== Decision
+
+The following Bounded Contexts and dependencies are defined.
+
+NOTE: The verification and federation context are integrations with external systems and only visualized here to have a complete overview.
+
+[[adr:ToBeContextMapReport]]
+[source,cypher,role=concept,reportType="context-mapper-diagram"]
+.The defined dependencies contexts and dependencies.
+----
+MATCH
+  (:ContextMapper:ContextMap{name: 'CWAToBeMap', state: 'TO_BE'})-[:SHOWS]->(bC1:ContextMapper:BoundedContext)
+OPTIONAL MATCH
+  (bC1)-[d:DEFINES_DEPENDENCY]->(bC2:ContextMapper:BoundedContext)
+RETURN
+  bC1, d, bC2
+----
+
+== Consequences
+
+The implemented Bounded Contexts and there actually implemented dependencies need to match the to-be-structure.
+
+[[adr:MissingDependency]]
+[source,cypher,role=constraint,requiresConcepts="jmolecules-ddd:*"]
+.If the to-be-map defines a dependency between Bounded Contexts, this dependency also needs to be implemented.
+----
+MATCH
+  (c:ContextMapper:ContextMap{name: 'CWAToBeMap', state: 'TO_BE'}),
+  (c)-[:SHOWS]->(cM1:ContextMapper:BoundedContext),
+  (c)-[:SHOWS]->(cM2:ContextMapper:BoundedContext),
+  (cM1)-[:DEFINES_DEPENDENCY]->(cM2),
+  (bC1:JMolecules:BoundedContext{name: cM1.name}),
+  (bC2:JMolecules:BoundedContext{name: cM2.name})
+WHERE
+  NOT (bC1)-[:DEPENDS_ON]->(bC2)
+RETURN
+  bC1 AS Source, bC2 AS Target
+----
+
+[[adr:UndefinedDependency]]
+[source,cypher,role=constraint,requiresConcepts="jmolecules-ddd:*"]
+.If the to-be-map defines no dependencies between Bounded Contexts, then also no dependency must be implemented.
+----
+MATCH
+  (bC1:JMolecules:BoundedContext{name: cM1.name}),
+  (bC2:JMolecules:BoundedContext{name: cM2.name}),
+  (bC1)-[:DEPENDS_ON]->(bC2),
+  (c:ContextMapper:ContextMap{name: 'CWAToBeMap', state: 'TO_BE'}),
+  (c)-[:SHOWS]->(cM1:ContextMapper:BoundedContext),
+  (c)-[:SHOWS]->(cM2:ContextMapper:BoundedContext)
+WHERE
+  NOT (cM1)-[:DEFINES_DEPENDENCY]->(cM2)
+RETURN
+  bC1 AS Source, bC2 AS Target
+----
+
+== Reports
+
+[[adr:AsIsContextMapReport]]
+[source,cypher,role=concept,requiresConcepts="jmolecules-ddd:*",reportType="context-mapper-diagram"]
+.Implemented Bounded Contexts as Context Mapper diagram
+----
+MATCH
+  (bC1:JMolecules:BoundedContext),
+  (bC2:JMolecules:BoundedContext)
+WHERE
+  bC1 <> bC2
+OPTIONAL MATCH
+  (bC1)-[d:DEPENDS_ON]->(bC2)
+RETURN
+  bC1, d, bC2
+----

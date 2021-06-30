@@ -1,0 +1,25 @@
+ContextMap CWAToBeMap {
+  state = TO_BE
+
+  contains CallbackContext
+  contains DistributionContext
+  contains DownloadContext
+  contains SubmissionContext
+  contains UploadContext
+  contains VerificationContext
+  contains FederationContext
+
+  VerificationContext [U]->[D] SubmissionContext
+  FederationContext [U]->[D] CallbackContext
+  FederationContext [U]->[D] UploadContext
+  FederationContext [U]->[D] DownloadContext
+}
+
+BoundedContext CallbackContext
+BoundedContext DistributionContext
+BoundedContext DownloadContext
+BoundedContext SubmissionContext
+BoundedContext UploadContext
+
+BoundedContext VerificationContext
+BoundedContext FederationContext

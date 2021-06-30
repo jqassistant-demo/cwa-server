@@ -15,6 +15,7 @@ include::jQA:Summary[constraints="*"]
 include::adr/structure/Use_Spring_Boot_For_Service_Components.adoc[leveloffset=+3]
 include::adr/structure/Re-Use_Common_Functionality.adoc[leveloffset=+3]
 include::adr/structure/Apply_Component_Dependencies.adoc[leveloffset=+3]
+include::adr/structure/Implement_Bounded_Context_Structure.adoc[leveloffset=+3]
 
 === Protobuf
 
