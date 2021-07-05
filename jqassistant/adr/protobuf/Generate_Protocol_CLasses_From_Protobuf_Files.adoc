@@ -1,4 +1,4 @@
-= Generate Protocols From Protobuf Files
+= Generate Protocol Classes From Protobuf Files
 
 == Status
 
@@ -10,7 +10,7 @@ https://developers.google.com/protocol-buffers[Protocol Buffers] are used for co
 
 == Decision
 
-The protocol files are located in the Maven module `common/protocols` as `.proto` files.
+The protocol files are located in the Maven module `common/protocols` as `.proto` files in the folder `src/main/proto`.
 The Java classes are generated using the `protobuf-maven-plugin`.
 
 == Consequences
