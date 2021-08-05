@@ -71,11 +71,11 @@
     <findify-s3mock.version>0.2.6</findify-s3mock.version>
     <checkstyle.version>8.41.1</checkstyle.version>
     <jmolecules.version>1.2.0</jmolecules.version>
-    <jqassistant.maven.version>1.10.0</jqassistant.maven.version>
+    <jqassistant.maven.version>1.10.1</jqassistant.maven.version>
     <jqassistant.dashboard.version>1.10.0</jqassistant.dashboard.version>
     <jqassistant.plantuml-rule.version>1.10.0</jqassistant.plantuml-rule.version>
     <jqassistant.context-mapper.version>1.0.0</jqassistant.context-mapper.version>
-    <jqassistant.jmolecules.version>1.0.1</jqassistant.jmolecules.version>
+    <jqassistant.jmolecules.version>1.2.0</jqassistant.jmolecules.version>
   </properties>
 
   <dependencyManagement>
