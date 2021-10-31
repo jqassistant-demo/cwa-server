@@ -3,7 +3,7 @@
 = CWA Server
 
 [[adr]]
-[role=group,includesConstraints="adr:*",includesConcepts="adr:*Report"]
+[role=group,includesConstraints="adr:*",includesConcepts="adr:*"]
 == Architecture Decision Records
 
 === jQAssistant Summary
