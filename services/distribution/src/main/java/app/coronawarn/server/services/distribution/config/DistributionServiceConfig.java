@@ -2,6 +2,7 @@ package app.coronawarn.server.services.distribution.config;
 
 import app.coronawarn.server.common.protocols.external.exposurenotification.SignatureInfo;
 import app.coronawarn.server.common.shared.util.SerializationUtils;
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.constraints.Max;
@@ -71,6 +72,8 @@ public class DistributionServiceConfig {
   private QrCodePosterTemplate androidQrCodePosterTemplate;
   private PresenceTracingParameters presenceTracingParameters;
   private DigitalGreenCertificate digitalGreenCertificate;
+  private Integer connectionPoolSize;
+  private String defaultArchiveName;
 
   public Paths getPaths() {
     return paths;
@@ -280,9 +283,9 @@ public class DistributionServiceConfig {
 
   public static class StatisticsConfig {
 
-    private Double trendCalculationThreshold;
-
     private String statisticPath;
+
+    private String localStatisticPath;
 
     private String accessKey;
 
@@ -292,20 +295,20 @@ public class DistributionServiceConfig {
 
     private String bucket;
 
+    public String getLocalStatisticPath() {
+      return localStatisticPath;
+    }
+
+    public void setLocalStatisticPath(String localStatisticPath) {
+      this.localStatisticPath = localStatisticPath;
+    }
+
     public String getStatisticPath() {
       return statisticPath;
     }
 
     public void setStatisticPath(String statisticPath) {
       this.statisticPath = statisticPath;
-    }
-
-    public Double getTrendCalculationThreshold() {
-      return trendCalculationThreshold;
-    }
-
-    public void setTrendCalculationThreshold(Double trendCalculationThreshold) {
-      this.trendCalculationThreshold = trendCalculationThreshold;
     }
 
     public String getAccessKey() {
@@ -460,6 +463,8 @@ public class DistributionServiceConfig {
     @Pattern(regexp = CHAR_AND_NUMBER_REGEX)
     private String statisticsFileName;
     @Pattern(regexp = CHAR_AND_NUMBER_REGEX)
+    private String localStatisticsFileName;
+    @Pattern(regexp = CHAR_AND_NUMBER_REGEX)
     private String traceWarningsPath;
 
     public String getStatisticsFileName() {
@@ -468,6 +473,14 @@ public class DistributionServiceConfig {
 
     public void setStatisticsFileName(String statisticsFileName) {
       this.statisticsFileName = statisticsFileName;
+    }
+
+    public String getLocalStatisticsFileName() {
+      return localStatisticsFileName;
+    }
+
+    public void setLocalStatisticsFileName(String localStatisticsFileName) {
+      this.localStatisticsFileName = localStatisticsFileName;
     }
 
     public String getAppConfigV2IosFileName() {
@@ -869,6 +882,22 @@ public class DistributionServiceConfig {
     this.digitalGreenCertificate = digitalGreenCertificate;
   }
 
+  public Integer getConnectionPoolSize() {
+    return connectionPoolSize;
+  }
+
+  public void setConnectionPoolSize(Integer connectionPoolSize) {
+    this.connectionPoolSize = connectionPoolSize;
+  }
+
+  public String getDefaultArchiveName() {
+    return defaultArchiveName;
+  }
+
+  public void setDefaultArchiveName(String defaultArchiveName) {
+    this.defaultArchiveName = defaultArchiveName;
+  }
+
   public static class ObjectStore {
 
     @Pattern(regexp = NO_WHITESPACE_REGEX)
@@ -974,9 +1003,96 @@ public class DistributionServiceConfig {
     }
   }
 
+  public static class Client {
+
+    private String publicKey;
+
+    private String baseUrl;
+
+    private Ssl ssl;
+
+    private int retryPeriod;
+
+    private int maxRetryPeriod;
+
+    private int maxRetryAttempts;
+
+    public String getPublicKey() {
+      return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+      this.publicKey = publicKey;
+    }
+
+    public Ssl getSsl() {
+      return ssl;
+    }
+
+    public void setSsl(Ssl ssl) {
+      this.ssl = ssl;
+    }
+
+    public String getBaseUrl() {
+      return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+      this.baseUrl = baseUrl;
+    }
+
+    public int getRetryPeriod() {
+      return retryPeriod;
+    }
+
+    public void setRetryPeriod(int retryPeriod) {
+      this.retryPeriod = retryPeriod;
+    }
+
+    public int getMaxRetryPeriod() {
+      return maxRetryPeriod;
+    }
+
+    public void setMaxRetryPeriod(int maxRetryPeriod) {
+      this.maxRetryPeriod = maxRetryPeriod;
+    }
+
+    public int getMaxRetryAttempts() {
+      return maxRetryAttempts;
+    }
+
+    public void setMaxRetryAttempts(int maxRetryAttempts) {
+      this.maxRetryAttempts = maxRetryAttempts;
+    }
+
+    public static class Ssl {
+
+      private File trustStore;
+      private String trustStorePassword;
+
+      public File getTrustStore() {
+        return trustStore;
+      }
+
+      public void setTrustStore(File trustStore) {
+        this.trustStore = trustStore;
+      }
+
+      public String getTrustStorePassword() {
+        return trustStorePassword;
+      }
+
+      public void setTrustStorePassword(String trustStorePassword) {
+        this.trustStorePassword = trustStorePassword;
+      }
+    }
+  }
+
   public static class AppFeature {
 
     private String label;
+    @Min(0)
+    @Max(1)
     private Integer value;
 
     public String getLabel() {
@@ -1066,6 +1182,7 @@ public class DistributionServiceConfig {
     private AndroidEventDrivenUserSurveyParameters androidEventDrivenUserSurveyParameters;
     private IosPrivacyPreservingAnalyticsParameters iosPrivacyPreservingAnalyticsParameters;
     private AndroidPrivacyPreservingAnalyticsParameters androidPrivacyPreservingAnalyticsParameters;
+    private DgcParameters dgcParameters;
 
     public IosEventDrivenUserSurveyParameters getIosEventDrivenUserSurveyParameters() {
       return iosEventDrivenUserSurveyParameters;
@@ -1134,6 +1251,14 @@ public class DistributionServiceConfig {
     public void setAndroidExposureDetectionParameters(
         AndroidExposureDetectionParameters androidExposureDetectionParameters) {
       this.androidExposureDetectionParameters = androidExposureDetectionParameters;
+    }
+
+    public DgcParameters getDgcParameters() {
+      return dgcParameters;
+    }
+
+    public void setDgcParameters(DgcParameters dgcParameters) {
+      this.dgcParameters = dgcParameters;
     }
 
     public static class AndroidKeyDownloadParameters extends CommonKeyDownloadParameters {
@@ -1474,6 +1599,59 @@ public class DistributionServiceConfig {
         this.requireEvaluationTypeHardwareBacked = requireEvaluationTypeHardwareBacked;
       }
     }
+
+    public static class DgcParameters {
+
+      private DgcTestCertificateParameters dgcTestCertificateParameters;
+
+      @Min(0)
+      @Max(100)
+      private Integer expirationThresholdInDays;
+
+      public DgcTestCertificateParameters getTestCertificateParameters() {
+        return dgcTestCertificateParameters;
+      }
+
+      public void setTestCertificateParameters(DgcTestCertificateParameters dgcTestCertificateParameters) {
+        this.dgcTestCertificateParameters = dgcTestCertificateParameters;
+      }
+
+      public Integer getExpirationThresholdInDays() {
+        return expirationThresholdInDays;
+      }
+
+      public void setExpirationThresholdInDays(Integer expirationThresholdInDays) {
+        this.expirationThresholdInDays = expirationThresholdInDays;
+      }
+
+      public static class DgcTestCertificateParameters {
+
+        @Min(0)
+        @Max(60)
+        private Integer waitAfterPublicKeyRegistrationInSeconds;
+
+        @Min(0)
+        @Max(60)
+        private Integer waitForRetryInSeconds;
+
+        public Integer getWaitAfterPublicKeyRegistrationInSeconds() {
+          return waitAfterPublicKeyRegistrationInSeconds;
+        }
+
+        public void setWaitAfterPublicKeyRegistrationInSeconds(Integer waitAfterPublicKeyRegistrationInSeconds) {
+          this.waitAfterPublicKeyRegistrationInSeconds = waitAfterPublicKeyRegistrationInSeconds;
+        }
+
+        public Integer getWaitForRetryInSeconds() {
+          return waitForRetryInSeconds;
+        }
+
+        public void setWaitForRetryInSeconds(Integer waitForRetryInSeconds) {
+          this.waitForRetryInSeconds = waitForRetryInSeconds;
+        }
+      }
+
+    }
   }
 
   public static class DigitalGreenCertificate {
@@ -1487,15 +1665,37 @@ public class DistributionServiceConfig {
     @Pattern(regexp = RESOURCE_OR_EMPTY_REGEX)
     private String medicinalProductsJsonPath;
 
+    @Pattern(regexp = RESOURCE_OR_EMPTY_REGEX)
+    private String diseaseAgentTargetedJsonPath;
+
+    @Pattern(regexp = RESOURCE_OR_EMPTY_REGEX)
+    private String testManfJsonPath;
+
+    @Pattern(regexp = RESOURCE_OR_EMPTY_REGEX)
+    private String testResultJsonPath;
+
+    @Pattern(regexp = RESOURCE_OR_EMPTY_REGEX)
+    private String testTypeJsonPath;
+
     @NotNull
     @Pattern(regexp = CHAR_AND_NUMBER_REGEX)
     private String dgcDirectory;
 
     @NotNull
     @Pattern(regexp = CHAR_AND_NUMBER_REGEX)
+    private String boosterNotification;
+
+    @NotNull
+    @Pattern(regexp = CHAR_AND_NUMBER_REGEX)
     private String valuesetsFileName;
 
     private String[] supportedLanguages;
+
+    private String exportArchiveName;
+
+    private Client client;
+
+    private Client dscClient;
 
     public String getMahJsonPath() {
       return mahJsonPath;
@@ -1521,12 +1721,52 @@ public class DistributionServiceConfig {
       this.medicinalProductsJsonPath = medicinalProductsJsonPath;
     }
 
+    public String getDiseaseAgentTargetedJsonPath() {
+      return diseaseAgentTargetedJsonPath;
+    }
+
+    public void setDiseaseAgentTargetedJsonPath(String diseaseAgentTargetedJsonPath) {
+      this.diseaseAgentTargetedJsonPath = diseaseAgentTargetedJsonPath;
+    }
+
+    public String getTestManfJsonPath() {
+      return testManfJsonPath;
+    }
+
+    public void setTestManfJsonPath(String testManfJsonPath) {
+      this.testManfJsonPath = testManfJsonPath;
+    }
+
+    public String getTestResultJsonPath() {
+      return testResultJsonPath;
+    }
+
+    public void setTestResultJsonPath(String testResultJsonPath) {
+      this.testResultJsonPath = testResultJsonPath;
+    }
+
+    public String getTestTypeJsonPath() {
+      return testTypeJsonPath;
+    }
+
+    public void setTestTypeJsonPath(String testTypeJsonPath) {
+      this.testTypeJsonPath = testTypeJsonPath;
+    }
+
     public String getDgcDirectory() {
       return dgcDirectory;
     }
 
     public void setDgcDirectory(String dgcDirectory) {
       this.dgcDirectory = dgcDirectory;
+    }
+
+    public String getBoosterNotification() {
+      return boosterNotification;
+    }
+
+    public void setBoosterNotification(String boosterNotification) {
+      this.boosterNotification = boosterNotification;
     }
 
     public String getValuesetsFileName() {
@@ -1543,6 +1783,30 @@ public class DistributionServiceConfig {
 
     public void setSupportedLanguages(String[] supportedLanguages) {
       this.supportedLanguages = supportedLanguages;
+    }
+
+    public Client getClient() {
+      return client;
+    }
+
+    public void setClient(Client client) {
+      this.client = client;
+    }
+
+    public Client getDscClient() {
+      return dscClient;
+    }
+
+    public void setDscClient(Client dscClient) {
+      this.dscClient = dscClient;
+    }
+
+    public String getExportArchiveName() {
+      return exportArchiveName;
+    }
+
+    public void setExportArchiveName(String exportArchiveName) {
+      this.exportArchiveName = exportArchiveName;
     }
   }
 }

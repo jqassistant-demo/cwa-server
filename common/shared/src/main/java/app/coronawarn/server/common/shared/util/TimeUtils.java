@@ -2,15 +2,22 @@
 
 package app.coronawarn.server.common.shared.util;
 
+import static java.time.ZoneOffset.UTC;
+
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimeUtils {
 
-  private static Instant now;
+  private static final Logger logger = LoggerFactory
+      .getLogger(TimeUtils.class);
+
+  private static Clock clock = Clock.systemUTC();
 
   private TimeUtils() {
   }
@@ -21,7 +28,7 @@ public class TimeUtils {
    * @return LocalDateTime of current UTC hour
    */
   public static LocalDateTime getCurrentUtcHour() {
-    return LocalDateTime.ofInstant(getNow().truncatedTo(ChronoUnit.HOURS), ZoneOffset.UTC);
+    return LocalDateTime.ofInstant(getNow().truncatedTo(ChronoUnit.HOURS), UTC);
   }
 
   /**
@@ -39,18 +46,31 @@ public class TimeUtils {
    * @return current Instant
    */
   public static Instant getNow() {
-    if (now == null) {
-      now = Instant.now();
-    }
-    return now;
+    return Instant.now(clock);
   }
 
   /**
-   * Injects UTC instant time value.
+   * Derive local date at UTC zone to epoch seconds.
    *
-   * @param instant an {@link Instant} object.
+   * @return - to epoch seconds
+   */
+  public static long toEpochSecondsUtc(LocalDate localDate) {
+    return localDate.atStartOfDay(UTC).toEpochSecond();
+  }
+
+  /**
+   * Injects UTC instant time value.<br />
+   *
+   * <strong>NOTE: THIS IS ONLY FOR TESTING PURPOSES!</strong>
+   *
+   * @param instant an {@link Instant} as a fixed time to set.
    */
   public static void setNow(Instant instant) {
-    now = instant;
+    if (instant == null) {
+      clock = Clock.systemUTC();
+      return;
+    }
+    logger.warn("Setting the clock to a fixed time. THIS SHOULD NEVER BE USED IN PRODUCTION!");
+    clock = Clock.fixed(instant, UTC);
   }
 }
