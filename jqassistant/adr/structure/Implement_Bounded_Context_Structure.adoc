@@ -40,9 +40,9 @@ MATCH
   (c:ContextMapper:ContextMap{name: 'CWAToBeMap', state: 'TO_BE'}),
   (c)-[:SHOWS]->(cM1:ContextMapper:BoundedContext),
   (c)-[:SHOWS]->(cM2:ContextMapper:BoundedContext),
-  (cM1)-[:DEFINES_DEPENDENCY]->(cM2),
   (bC1:JMolecules:BoundedContext{name: cM1.name}),
-  (bC2:JMolecules:BoundedContext{name: cM2.name})
+  (bC2:JMolecules:BoundedContext{name: cM2.name}),
+  (cM1)-[:DEFINES_DEPENDENCY]->(cM2)
 WHERE
   NOT (bC1)-[:DEPENDS_ON]->(bC2)
 RETURN
@@ -54,12 +54,12 @@ RETURN
 .If the to-be-map defines no dependencies between Bounded Contexts, then also no dependency must be implemented.
 ----
 MATCH
-  (bC1:JMolecules:BoundedContext{name: cM1.name}),
-  (bC2:JMolecules:BoundedContext{name: cM2.name}),
-  (bC1)-[:DEPENDS_ON]->(bC2),
   (c:ContextMapper:ContextMap{name: 'CWAToBeMap', state: 'TO_BE'}),
   (c)-[:SHOWS]->(cM1:ContextMapper:BoundedContext),
-  (c)-[:SHOWS]->(cM2:ContextMapper:BoundedContext)
+  (c)-[:SHOWS]->(cM2:ContextMapper:BoundedContext),
+  (bC1:JMolecules:BoundedContext{name: cM1.name}),
+  (bC2:JMolecules:BoundedContext{name: cM2.name}),
+  (bC1)-[:DEPENDS_ON]->(bC2)
 WHERE
   NOT (cM1)-[:DEFINES_DEPENDENCY]->(cM2)
 RETURN
