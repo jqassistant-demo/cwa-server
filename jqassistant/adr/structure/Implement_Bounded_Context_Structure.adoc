@@ -33,15 +33,15 @@ RETURN
 The implemented Bounded Contexts and there actually implemented dependencies need to match the to-be-structure.
 
 [[adr:MissingDependency]]
-[source,cypher,role=constraint,requiresConcepts="jmolecules-ddd:*"]
+[source,cypher,role=constraint,requiresConcepts="adr:JMoleculesBCImplementsContextMapperBC"]
 .If the to-be-map defines a dependency between Bounded Contexts, this dependency also needs to be implemented.
 ----
 MATCH
   (c:ContextMapper:ContextMap{name: 'CWAToBeMap', state: 'TO_BE'}),
   (c)-[:SHOWS]->(cM1:ContextMapper:BoundedContext),
   (c)-[:SHOWS]->(cM2:ContextMapper:BoundedContext),
-  (bC1:JMolecules:BoundedContext{name: cM1.name}),
-  (bC2:JMolecules:BoundedContext{name: cM2.name}),
+  (bC1:JMolecules:BoundedContext)-[:IMPLEMENTS]->(cM1),
+  (bC2:JMolecules:BoundedContext)-[:IMPLEMENTS]->(cM2),
   (cM1)-[:DEFINES_DEPENDENCY]->(cM2)
 WHERE
   NOT (bC1)-[:DEPENDS_ON]->(bC2)
@@ -50,20 +50,37 @@ RETURN
 ----
 
 [[adr:UndefinedDependency]]
-[source,cypher,role=constraint,requiresConcepts="jmolecules-ddd:*"]
+[source,cypher,role=constraint,requiresConcepts="adr:JMoleculesBCImplementsContextMapperBC"]
 .If the to-be-map defines no dependencies between Bounded Contexts, then also no dependency must be implemented.
 ----
 MATCH
   (c:ContextMapper:ContextMap{name: 'CWAToBeMap', state: 'TO_BE'}),
   (c)-[:SHOWS]->(cM1:ContextMapper:BoundedContext),
   (c)-[:SHOWS]->(cM2:ContextMapper:BoundedContext),
-  (bC1:JMolecules:BoundedContext{name: cM1.name}),
-  (bC2:JMolecules:BoundedContext{name: cM2.name}),
+  (bC1:JMolecules:BoundedContext)-[:IMPLEMENTS]->(cM1),
+  (bC2:JMolecules:BoundedContext)-[:IMPLEMENTS]->(cM2),
   (bC1)-[:DEPENDS_ON]->(bC2)
 WHERE
   NOT (cM1)-[:DEFINES_DEPENDENCY]->(cM2)
 RETURN
   bC1 AS Source, bC2 AS Target
+----
+
+== Concepts
+
+[[adr:JMoleculesBCImplementsContextMapperBC]]
+[source,cypher,role=concept,requiresConcepts="jmolecules-ddd:*"]
+.A Bounded Context defined by ContextMapper is IMPLEMENTED by a jMolecules Bounded Context when their names match.
+----
+MATCH
+  (jmbc:JMolecules:BoundedContext),
+  (cmbc:ContextMapper:BoundedContext)
+WHERE
+  jmbc.name = cmbc.name
+MERGE
+  (jmbc)-[:IMPLEMENTS]->(cmbc)
+RETURN
+  jmbc as JMoleculesBC, cmbc as ContextMapperBC
 ----
 
 == Reports
