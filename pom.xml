@@ -75,7 +75,7 @@
     <checkstyle.version>9.0.1</checkstyle.version>
     <checkstyle.version>8.41.1</checkstyle.version>
     <jmolecules.version>1.2.0</jmolecules.version>
-    <jqassistant.maven.version>1.11.0</jqassistant.maven.version>
+    <jqassistant.maven.version>1.11.1</jqassistant.maven.version>
     <jqassistant.dashboard.version>1.10.0</jqassistant.dashboard.version>
     <jqassistant.plantuml-rule.version>1.10.0</jqassistant.plantuml-rule.version>
     <jqassistant.context-mapper.version>1.0.0</jqassistant.context-mapper.version>
