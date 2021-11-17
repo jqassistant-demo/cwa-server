@@ -8,7 +8,7 @@ services:
       - 7687:7687
     environment:
       - NEO4J_AUTH=none
-#     - NEO4JLABS_PLUGINS=["apoc"]
+      - NEO4JLABS_PLUGINS=["apoc"]
     volumes:
       - ./target/jqassistant/store:/data/databases/graph.db
   jupyter:
