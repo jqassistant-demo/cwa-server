@@ -12,7 +12,7 @@ services:
     volumes:
       - ./target/jqassistant/store:/data/databases/graph.db
   jupyter:
-    image: jqassistant/jupyter-notebook:1.10.0
+    image: jqassistant/jupyter-notebook:1.11.0
     ports:
       - 8888:8888
     environment:
