@@ -42,9 +42,11 @@
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
     <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
 
+    <!--
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>corona-warn-app</sonar.organization>
     <sonar.projectKey>${sonar.organization}_cwa-${project.artifactId}</sonar.projectKey>
+    -->
 
     <!-- https://spring.io/projects/spring-boot -->
     <spring-boot.version>2.5.6</spring-boot.version>
@@ -75,11 +77,7 @@
     <checkstyle.version>9.0.1</checkstyle.version>
     <checkstyle.version>8.41.1</checkstyle.version>
     <jmolecules.version>1.2.0</jmolecules.version>
-    <jqassistant.maven.version>1.11.1</jqassistant.maven.version>
-    <jqassistant.dashboard.version>1.10.0</jqassistant.dashboard.version>
-    <jqassistant.plantuml-rule.version>1.10.0</jqassistant.plantuml-rule.version>
-    <jqassistant.context-mapper.version>1.0.0</jqassistant.context-mapper.version>
-    <jqassistant.jmolecules.version>1.2.0</jqassistant.jmolecules.version>
+    <jqassistant.maven.version>1.12.0-SNAPSHOT</jqassistant.maven.version>
   </properties>
 
   <dependencyManagement>
@@ -656,65 +654,8 @@
               <goal>scan</goal>
               <goal>analyze</goal>
             </goals>
-            <configuration>
-              <scanIncludes>
-                <!-- Git repository -->
-                <scanInclude>
-                  <path>${project.basedir}/.git</path>
-                </scanInclude>
-                <!-- JaCoCo -->
-                <scanInclude>
-                  <path>${project.build.directory}/site</path>
-                </scanInclude>
-                <!-- Context Mapper -->
-                <scanInclude>
-                  <path>${project.basedir}/jqassistant/context-mapper</path>
-                </scanInclude>
-              </scanIncludes>
-              <groups>
-                  <group>adr</group>
-                  <group>spring-boot:Strict</group>
-                  <group>jqassistant-dashboard:Default</group>
-                  <group>jmolecules-ddd:Default</group>
-              </groups>
-              <rule>
-                <defaultConceptSeverity>INFO</defaultConceptSeverity>
-              </rule>
-              <failOnSeverity>CRITICAL</failOnSeverity>
-              <warnOnSeverity>MINOR</warnOnSeverity>
-              <attachReportArchive>true</attachReportArchive>
-            </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <!-- Includes the jQAssistant Dashboard and Git/JaCoCo plugins -->
-            <groupId>org.jqassistant.contrib.plugin</groupId>
-            <artifactId>jqassistant-dashboard-plugin</artifactId>
-            <version>${jqassistant.dashboard.version}</version>
-          </dependency>
-          <dependency>
-            <!--
-              Allows definition of components and dependencies using PlantUML,
-              see /jqassistant/adr/structure/Apply_Component_Dependencies.adoc
-            -->
-            <groupId>org.jqassistant.contrib.plugin</groupId>
-            <artifactId>jqassistant-plantuml-rule-plugin</artifactId>
-            <version>${jqassistant.plantuml-rule.version}</version>
-          </dependency>
-          <dependency>
-            <!-- Integration with jMolecules annotations -->
-            <groupId>org.jqassistant.contrib.plugin</groupId>
-            <artifactId>jqassistant-jmolecules-plugin</artifactId>
-            <version>${jqassistant.jmolecules.version}</version>
-          </dependency>
-          <!-- Ability to scan and generate context maps with Context Mapper -->
-          <dependency>
-            <groupId>org.jqassistant.contrib.plugin</groupId>
-            <artifactId>jqassistant-context-mapper-plugin</artifactId>
-            <version>${jqassistant.context-mapper.version}</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
   </build>
