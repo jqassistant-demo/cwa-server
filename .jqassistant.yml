@@ -3,11 +3,11 @@ jqassistant:
     # Includes the jQAssistant Dashboard and Git/JaCoCo plugins
     - group-id: org.jqassistant.contrib.plugin
       artifact-id: jqassistant-dashboard-plugin
-      version: 1.12.0-SNAPSHOT
+      version: 1.12.0-M1
     # Allows definition of components and dependencies using PlantUML, see /jqassistant/adr/structure/Apply_Component_Dependencies.adoc
     - group-id: org.jqassistant.contrib.plugin
       artifact-id: jqassistant-plantuml-rule-plugin
-      version: 1.12.0-SNAPSHOT
+      version: 1.12.0-M1
     # Integration with jMolecules annotations
     - group-id: org.jqassistant.contrib.plugin
       artifact-id: jqassistant-jmolecules-plugin
@@ -15,7 +15,7 @@ jqassistant:
     # Ability to scan and generate context maps with Context Mapper
     - group-id: org.jqassistant.contrib.plugin
       artifact-id: jqassistant-context-mapper-plugin
-      version: 1.1.0-SNAPSHOT
+      version: 1.1.0-M1
   scan:
     include:
       files:
