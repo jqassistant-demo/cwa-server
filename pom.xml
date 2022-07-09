@@ -77,7 +77,7 @@
     <checkstyle.version>9.0.1</checkstyle.version>
     <checkstyle.version>8.41.1</checkstyle.version>
     <jmolecules.version>1.2.0</jmolecules.version>
-    <jqassistant.maven.version>1.12.0-M1</jqassistant.maven.version>
+    <jqassistant.maven.version>1.12.0</jqassistant.maven.version>
   </properties>
 
   <dependencyManagement>
@@ -642,6 +642,7 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
       </plugin>
+
       <!-- jQAssistant -->
       <plugin>
         <groupId>com.buschmais.jqassistant</groupId>

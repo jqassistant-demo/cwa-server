@@ -20,11 +20,11 @@ jqassistant:
     include:
       files:
         # Git repository
-        - .git
+        - ${project.basedir}/.git
         # JaCoCo
-        - target/site
+        - ${project.build.directory}/site
         # Context Mapper
-        - jqassistant/context-mapper
+        - ${project.basedir}/jqassistant/context-mapper
   analyze:
     rule:
       default-concept-severity: INFO
@@ -35,5 +35,8 @@ jqassistant:
       - jmolecules-ddd:Default
     report:
       warn-on-severity: MINOR
-      fail-on-severity: CRITICAL
+      fail-on-severity: MAJOR
+      continue-on-failure: true
       create-archive: true
+      properties:
+        plantuml.report.rendermode: elk
