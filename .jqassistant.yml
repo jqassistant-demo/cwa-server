@@ -11,7 +11,7 @@ jqassistant:
     # Integration with jMolecules annotations
     - group-id: org.jqassistant.contrib.plugin
       artifact-id: jqassistant-jmolecules-plugin
-      version: 1.2.0
+      version: 1.4.0
     # Ability to scan and generate context maps with Context Mapper
     - group-id: org.jqassistant.contrib.plugin
       artifact-id: jqassistant-context-mapper-plugin
